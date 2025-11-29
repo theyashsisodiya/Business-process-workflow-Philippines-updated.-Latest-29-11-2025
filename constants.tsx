@@ -3,148 +3,153 @@ import { Actor, WorkflowStep } from './types';
 const DETAILED_PHILIPPINES_WORKFLOW: WorkflowStep[] = [
     {
         id: 'PH_P1',
-        title: "Phase 1: Registration, Medical & Selection",
+        title: "Phase 1: Registration, Medical Screening & Job Acceptance",
         actor: Actor.SYSTEM,
-        description: "The initial phase where the candidate registers, undergoes medical screening, and prepares for job selection.",
+        description: "Scope: From initial entry to medical clearance.",
+    },
+    {
+        id: 'PH1_0',
+        title: "1.0 Candidate Registration",
+        actor: Actor.USER,
+        description: "Candidate completes Bio-data, uploads Photo, Video Interview, Passport Copy, selects Job Interests, and signs forms.\nSystem Feature: GPS tracking and registration on reporting day.",
     },
     {
         id: 'PH1_1',
-        title: "1.1 Candidate Registration & Profile Creation",
-        actor: Actor.USER,
-        description: "Candidate completes bio-data, uploads photo & passport copy, records video interview, and signs registration forms.",
+        title: "1.1 Job Scope Acceptance",
+        actor: Actor.ADMIN,
+        description: "Singapore Sales Staff emails detailed 'Job Scope Form' to PH office. Worker must sign to accept job duties.",
     },
     {
         id: 'PH1_2',
-        title: "1.2 Job Scope Acceptance",
-        actor: Actor.ADMIN,
-        description: "Singapore sales staff emails the detailed Job Scope form to the Manila/Iloilo office. The worker signs to accept the job scope.",
+        title: "1.2 Medical Examination (Holy Angel Medical Clinic)",
+        actor: Actor.USER,
+        description: "Worker takes referral form (hard copy or email) to clinic. Walk-in any day (Morning preferred). Worker pays directly. Results in 2 working days.",
     },
     {
         id: 'PH1_3',
-        title: "1.3 Medical Examination",
-        actor: Actor.USER,
-        description: "Worker proceeds to Holy Angel Medical Clinic with a referral form. Walk-in allowed. Payment is made directly by the worker. Results in 2 working days.",
+        title: "1.3 System Automation & Medical Tracking",
+        actor: Actor.SYSTEM,
+        description: "Auto-prompt N+1 day. Reminders for upload. Custom field entry for stats (e.g., BP). Alerts recruiter if silent.",
     },
     {
         id: 'PH1_4',
-        title: "1.4 Automated Medical Tracking & Alerts",
-        actor: Actor.SYSTEM,
-        description: "System prompts candidate (N+1 day), sends reminders, and alerts recruiters if no reply. Captures data like Blood Pressure levels.",
+        title: "1.4 Medical Results & Decision Logic",
+        actor: Actor.ADMIN,
+        description: "Admin collects Medical Certificate. Decision based on results:",
+        branches: [
+            { id: 'PH1_4a', title: "High Blood Pressure", actor: Actor.ADMIN, description: "Monitor for 7 days -> Re-take. If still high -> REJECT." },
+            { id: 'PH1_4b', title: "X-Ray Scarring", actor: Actor.ADMIN, description: "Immediate REJECT." },
+            { id: 'PH1_4c', title: "UTI", actor: Actor.USER, description: "Take medication for 1 week -> Re-do test (2 days result)." },
+            { id: 'PH1_4d', title: "Clear / Fit", actor: Actor.SYSTEM, description: "Candidate marked as 'Medically Fit'. Proceed to selection." },
+        ]
     },
     {
         id: 'PH1_5',
-        title: "1.5 Medical Results Handling",
-        actor: Actor.ADMIN,
-        description: "Admin collects medical certificate. Actions based on results:",
-        branches: [
-            { id: 'PH1_5a', title: "High BP", actor: Actor.ADMIN, description: "Monitor for 7 days and re-take. Reject if still high." },
-            { id: 'PH1_5b', title: "X-Ray Scarring", actor: Actor.ADMIN, description: "Worker is rejected." },
-            { id: 'PH1_5c', title: "UTI", actor: Actor.USER, description: "Worker takes medication for 1 week and re-does the test." },
-        ]
-    },
-    {
-        id: 'PH1_6',
-        title: "1.6 Selection Notification",
+        title: "1.5 Selection & Notification",
         actor: Actor.SYSTEM,
-        description: "If selected, system updates progress and notifies the candidate via WhatsApp/Email with referral form attached.",
+        description: "Trigger: Candidate selected. System notifies via WhatsApp/Email. Status updated. Auto-message with Referral Form sent.",
     },
     {
         id: 'PH_P2',
-        title: "Phase 2: Training & Certification",
-        actor: Actor.ADMIN,
-        description: "Processing required government training (TESDA, PDOS, OWWA) based on the candidate's experience history.",
+        title: "Phase 2: Training & Certification (The 'Forked' Path)",
+        actor: Actor.SYSTEM,
+        description: "Scope: TESDA, PDOS, and OWWA based on experience verification.",
     },
     {
-        id: 'PH2_1',
-        title: "2.1 Experience-Based Workflow Routing",
+        id: 'PH2_0',
+        title: "2.0 Experience Verification & Routing",
         actor: Actor.SYSTEM,
-        description: "The system routes candidates based on prior experience.",
+        description: "System routes candidates based on experience group:",
         branches: [
             { 
-                id: 'PH2_1a', 
-                title: "First Timer", 
+                id: 'PH2_0a', 
+                title: "Group A: First Timer", 
                 actor: Actor.SYSTEM, 
-                description: "Must complete TESDA, PDOS, and OWWA." 
+                description: "Must attend TESDA, PDOS, OWWA." 
             },
             { 
-                id: 'PH2_1b', 
-                title: "Ex-Singapore", 
+                id: 'PH2_0b', 
+                title: "Group B: Ex-Singapore", 
                 actor: Actor.SYSTEM, 
-                description: "Exempted from TESDA and OWWA. Proceeds directly to PDOS." 
+                description: "Skips TESDA & OWWA. Must attend PDOS. (Needs old Certs/POEA Info)." 
             },
             { 
-                id: 'PH2_1c', 
-                title: "Ex-Overseas (Non-SG)", 
+                id: 'PH2_0c', 
+                title: "Group C: Ex-Abroad (Non-SG)", 
                 actor: Actor.SYSTEM, 
-                description: "Exempted from TESDA. Must attend PDOS and OWWA." 
+                description: "Skips TESDA. Must attend PDOS & OWWA. (Needs old TESDA Cert/POEA Info)." 
             },
         ]
     },
     {
-        id: 'PH2_2',
-        title: "2.2 TESDA Course Booking (First Timers)",
+        id: 'PH2_1',
+        title: "2.1 TESDA Booking (Group A Only)",
         actor: Actor.ADMIN,
-        description: "Admin books 3-day course. Worker brings docs/payment. System auto-emails training center (1 week notice).",
+        description: "Admin books via Call/Message. Wait time ~1 week. 3 Days course. Cert released in 1 week. System auto-emails center.",
+    },
+    {
+        id: 'PH2_2',
+        title: "2.2 PDOS Booking (All Groups)",
+        actor: Actor.ADMIN,
+        description: "Prerequisite: Scanned EC from SG. Admin emails kalahipdosmabini@yahoo.com. 1 Day Online Course. Cert collected same day.",
     },
     {
         id: 'PH2_3',
-        title: "2.3 PDOS Booking",
+        title: "2.3 OWWA Booking (Group A & C)",
         actor: Actor.ADMIN,
-        description: "Triggered by scanned EC from SG. Admin checks availability and emails request. 1-day online course.",
-    },
-    {
-        id: 'PH2_4',
-        title: "2.4 OWWA Course Booking",
-        actor: Actor.ADMIN,
-        description: "Triggered by PDOS cert. Admin submits online (8-12pm). 1-day physical attendance required for worker.",
+        description: "Prerequisite: PDOS Cert. Online booking 8am-12pm. Max 20/day. Online course but mandatory physical attendance in office (8am-5pm).",
     },
     {
         id: 'PH_P3',
         title: "Phase 3: Contract Processing & Insurance",
         actor: Actor.ADMIN,
-        description: "Finalizing legal documentation and insurance coverage.",
+        description: "Scope: Original documents and legal coverage.",
     },
     {
         id: 'PH3_1',
-        title: "3.1 Original Employment Contract (EC) Signing",
+        title: "3.1 Original Employment Contract (EC) Handling",
         actor: Actor.ADMIN,
-        description: "Triggered by receipt of original Embassy-endorsed EC from SG. Worker reports to Manila office to sign.",
+        description: "Trigger: Original Embassy Endorsed EC arrives from SG. Worker reports to Manila to sign.",
+        branches: [
+            { id: 'PH3_1a', title: "Worker in Manila", actor: Actor.USER, description: "Reports directly to office to sign." },
+            { id: 'PH3_1b', title: "Worker in Branch", actor: Actor.ADMIN, description: "Manila informs Branch (e.g. Iloilo) -> Branch coordinates travel -> Updates Manila." },
+        ]
     },
     {
         id: 'PH3_2',
-        title: "3.2 Contract Receipt Management",
+        title: "3.2 Contract Receipt Automation",
         actor: Actor.SYSTEM,
-        description: "Admin updates receipt date. System auto-notifies worker to input reporting date. Escalates to Admin if no reply.",
+        description: "Manila Admin updates receipt date. System notifies worker to input reporting date. Alerts Admin if no reply.",
     },
     {
         id: 'PH3_3',
         title: "3.3 Insurance Purchase",
         actor: Actor.ADMIN,
-        description: "Admin manually fills insurance form and emails provider. Policy issued next day. Cash payment by Liaison.",
+        description: "Admin fills form. Worker signs manually. Admin emails passport+form. Policy next day. Cash payment by Liaison.",
     },
     {
         id: 'PH_P4',
-        title: "Phase 4: OEC Processing & Deployment",
+        title: "Phase 4: OEC Processing & Departure",
         actor: Actor.ADMIN,
-        description: "Final government clearance and travel arrangements.",
+        description: "Scope: Government clearance and flight.",
     },
     {
         id: 'PH4_1',
-        title: "4.1 OEC E-Registration & Submission",
+        title: "4.1 OEC Processing",
         actor: Actor.USER,
-        description: "Worker completes online e-registration and submits original documents (EC, Certificates, etc.) to DMW.",
+        description: "Worker completes E-Registration. Submits Original Docs to DMW (EC, Certs, Passport, Insurance). Result: OEC Approved.",
     },
     {
         id: 'PH4_2',
         title: "4.2 Flight Coordination",
         actor: Actor.ADMIN,
-        description: "Once OEC approved, Admin emails OEC to SG to arrange ticket. Admin advises earliest flight date.",
+        description: "Admin emails OEC to SG. Checks location/travel time. Advises earliest flight date. SG purchases ticket.",
     },
     {
         id: 'PH4_3',
         title: "4.3 Pre-Departure Requirements",
         actor: Actor.USER,
-        description: "Worker completes pregnancy serum test (3 days prior), stays in Manila accommodation (2-3 days), and attends pre-departure briefing.",
+        description: "Pregnancy Test (3 days before). Accommodation (2-3 days in Manila). Briefing by Office Manager.",
         isFinal: true
     }
 ];

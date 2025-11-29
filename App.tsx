@@ -32,7 +32,7 @@ const App: React.FC = () => {
       case 'singapore':
         return "Visualizing the MingHwee.com Singapore Employer Journey";
       case 'philippines':
-        return "Visualizing the Detailed Hiring Journey for Philippines-based Employers";
+        return "Visualizing the Comprehensive Agency & Deployment Workflow (Philippines Office)";
       case 'admin':
         return "Visualizing the Administrator's Management & Approval Process";
       case 'candidate':
