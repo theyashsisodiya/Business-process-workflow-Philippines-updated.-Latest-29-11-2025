@@ -136,7 +136,7 @@ const App: React.FC = () => {
                 : 'bg-transparent text-slate-500 hover:bg-white/50 hover:text-slate-700'
             }`}
           >
-            PH Candidate Workflow
+            PH Candidate Hiring
           </button>
            <button
             onClick={() => setActiveView('candidate')}
@@ -147,7 +147,7 @@ const App: React.FC = () => {
                 : 'bg-transparent text-slate-500 hover:bg-white/50 hover:text-slate-700'
             }`}
           >
-            Candidate Workflow
+            Overall Candidate Hiring (HLV)
           </button>
            <button
             onClick={() => setActiveView('combined')}
