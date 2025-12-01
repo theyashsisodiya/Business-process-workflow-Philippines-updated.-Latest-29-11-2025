@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { SINGAPORE_WORKFLOW_DATA, ADMIN_WORKFLOW_DATA, PHILIPPINES_WORKFLOW_DATA, CANDIDATE_WORKFLOW_DATA, COMBINED_WORKFLOW_DATA } from './constants';
+import { SINGAPORE_WORKFLOW_DATA, ADMIN_WORKFLOW_DATA, PHILIPPINES_WORKFLOW_DATA, CANDIDATE_WORKFLOW_DATA, COMBINED_WORKFLOW_DATA, EMPLOYER_PH_WORKFLOW_DATA } from './constants';
 import WorkflowNode from './components/WorkflowNode';
 
 // @ts-ignore
@@ -7,7 +7,7 @@ const { jsPDF } = window.jspdf;
 // @ts-ignore
 const html2canvas = window.html2canvas;
 
-type View = 'singapore' | 'philippines' | 'admin' | 'candidate' | 'combined';
+type View = 'singapore' | 'employer_ph' | 'philippines' | 'admin' | 'candidate' | 'combined';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<View>('singapore');
@@ -19,6 +19,8 @@ const App: React.FC = () => {
   const dataToRender =
     activeView === 'singapore'
       ? SINGAPORE_WORKFLOW_DATA
+      : activeView === 'employer_ph'
+      ? EMPLOYER_PH_WORKFLOW_DATA
       : activeView === 'philippines'
       ? PHILIPPINES_WORKFLOW_DATA
       : activeView === 'admin'
@@ -31,6 +33,8 @@ const App: React.FC = () => {
     switch(activeView) {
       case 'singapore':
         return "Visualizing the MingHwee.com Singapore Employer Journey";
+      case 'employer_ph':
+        return "Visualizing the Philippines Employer Journey (Local Hiring)";
       case 'philippines':
         return "Visualizing the Comprehensive Agency & Deployment Workflow (Philippines Office)";
       case 'admin':
@@ -126,6 +130,17 @@ const App: React.FC = () => {
             }`}
           >
             Employer Workflow (SG)
+          </button>
+          <button
+            onClick={() => setActiveView('employer_ph')}
+            aria-pressed={activeView === 'employer_ph'}
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+              activeView === 'employer_ph'
+                ? 'bg-white text-slate-900 shadow-md'
+                : 'bg-transparent text-slate-500 hover:bg-white/50 hover:text-slate-700'
+            }`}
+          >
+            Employer Workflow (PH)
           </button>
           <button
             onClick={() => setActiveView('philippines')}

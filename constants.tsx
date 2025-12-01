@@ -1,5 +1,172 @@
 import { Actor, WorkflowStep } from './types';
 
+export const DETAILED_EMPLOYER_PH_WORKFLOW: WorkflowStep[] = [
+    {
+        id: 'PH_EMP_P0',
+        title: "Phase 0: Employer Account Creation & Verification",
+        actor: Actor.SYSTEM,
+        description: "Initial registration and strict document verification process to ensure employer legitimacy.",
+    },
+    {
+        id: 'PH_EMP_0_1',
+        title: "0.1 Employer Registration",
+        actor: Actor.CLIENT,
+        description: "Employer enters Company/Individual Name, Email, Mobile (OTP), and Password. Profile is created with 'Pending Verification' status.",
+    },
+    {
+        id: 'PH_EMP_0_2',
+        title: "0.2 Required Documents Upload",
+        actor: Actor.CLIENT,
+        description: "Employer must upload mandatory documents for platform-level verification.",
+        branches: [
+            {
+                id: 'PH_EMP_0_2a',
+                title: "Company Employers",
+                actor: Actor.CLIENT,
+                description: "• Business Permit (DTI/SEC)\n• Mayor's Permit\n• Authorized Rep ID\n• DOLE/POEA License\n• Address Proof",
+            },
+            {
+                id: 'PH_EMP_0_2b',
+                title: "Individual Employers",
+                actor: Actor.CLIENT,
+                description: "• Valid Govt ID\n• Proof of Address\n• Proof of Income\n• Employment Profile Form",
+            }
+        ]
+    },
+    {
+        id: 'PH_EMP_0_3',
+        title: "0.3 Platform Verification",
+        actor: Actor.ADMIN,
+        description: "Admin reviews submitted documents. Upon approval, employer receives 'Verified Employer' badge.",
+        branches: [
+             { id: 'PH_EMP_0_3a', title: "Approved", actor: Actor.SYSTEM, description: "Employer verified. Can post jobs." },
+             { id: 'PH_EMP_0_3b', title: "Rejected", actor: Actor.SYSTEM, description: "Employer notified with reason." },
+             { id: 'PH_EMP_0_3c', title: "Pending Info", actor: Actor.SYSTEM, description: "Admin requests missing/corrected documents." },
+        ]
+    },
+    {
+        id: 'PH_EMP_P1',
+        title: "Phase 1: Job Posting on MingHwee",
+        actor: Actor.CLIENT,
+        description: "Employer creates job posts which undergo admin review for compliance.",
+    },
+    {
+        id: 'PH_EMP_1_1',
+        title: "1.1 Create Job Post",
+        actor: Actor.CLIENT,
+        description: "Fill details: Job Title, Category (Helper/Care/etc), Location, Type, Salary, Benefits, Hours, Skills, and Experience.",
+    },
+    {
+        id: 'PH_EMP_1_2',
+        title: "1.2 Job Post Review",
+        actor: Actor.ADMIN,
+        description: "Admin checks for legitimacy, Philippine labor rule compliance, and minimum salary standards.",
+        branches: [
+            { id: 'PH_EMP_1_2a', title: "Approved", actor: Actor.SYSTEM, description: "Job becomes active on the platform." },
+            { id: 'PH_EMP_1_2b', title: "Rejected/Edit", actor: Actor.SYSTEM, description: "Employer notified to edit or clarify details." }
+        ]
+    },
+    {
+        id: 'PH_EMP_P2',
+        title: "Phase 2: Auto-Matching",
+        actor: Actor.SYSTEM,
+        description: "AI-powered matching of active jobs to candidates based on deep criteria.",
+    },
+    {
+        id: 'PH_EMP_2_1',
+        title: "2.1 AI Candidate Matching",
+        actor: Actor.SYSTEM,
+        description: "Matches based on Skills, Years of Exp, Category, Nationality, Location, and Availability. Generates a 'Match List'.",
+    },
+    {
+        id: 'PH_EMP_2_2',
+        title: "2.2 Access Candidate Info",
+        actor: Actor.CLIENT,
+        description: "Employer views safe preview data only to protect privacy before payment.",
+        branches: [
+            { id: 'PH_EMP_2_2a', title: "Visible Data", actor: Actor.SYSTEM, description: "Name, Age, Nationality, Exp, Skills, Availability, Video (1-2 mins)." },
+            { id: 'PH_EMP_2_2b', title: "Hidden Data", actor: Actor.SYSTEM, description: "Passport, Police Clearance, Medical Reports, Contact Info." }
+        ]
+    },
+    {
+        id: 'PH_EMP_P3',
+        title: "Phase 3: Interview & Selection",
+        actor: Actor.CLIENT,
+        description: "Employer invites matched candidates, conducts interviews, and makes a selection.",
+    },
+    {
+        id: 'PH_EMP_3_1',
+        title: "3.1 Invite for Interview",
+        actor: Actor.CLIENT,
+        description: "Employer selects candidate -> Invite. System sends request, scheduling options, and platform video meeting link.",
+    },
+    {
+        id: 'PH_EMP_3_2',
+        title: "3.2 Conduct Interview",
+        actor: Actor.CLIENT,
+        description: "Conducted via video call. Post-interview, employer marks: 'Hire', 'Maybe', or 'Reject'.",
+    },
+    {
+        id: 'PH_EMP_P4',
+        title: "Phase 4: Payment to Confirm Hiring",
+        actor: Actor.CLIENT,
+        description: "Financial commitment to proceed with the selected candidate.",
+    },
+    {
+        id: 'PH_EMP_4_1',
+        title: "4.1 Payment Options",
+        actor: Actor.CLIENT,
+        description: "Accepted Methods: PayNow, Credit/Debit Card. (No bank transfer).",
+        branches: [
+            { id: 'PH_EMP_4_1a', title: "Option A: Full Payment", actor: Actor.SYSTEM, description: "Activates full processing & deployment. Candidate locked." },
+            { id: 'PH_EMP_4_1b', title: "Option B: Booking Fee", actor: Actor.SYSTEM, description: "Reserves candidate for 7 days. Refundable per policy." }
+        ]
+    },
+    {
+        id: 'PH_EMP_4_2',
+        title: "4.2 Hiring Activation",
+        actor: Actor.SYSTEM,
+        description: "Upon payment: System marks candidate as 'Selected', locks profile, triggers docs, notifies all parties, and assigns an Admin Case Handler.",
+    },
+    {
+        id: 'PH_EMP_P5',
+        title: "Phase 5: Documentation & Compliance",
+        actor: Actor.ADMIN,
+        description: "Admin handles the collection and verification of all documents. Employer involvement is minimal.",
+    },
+    {
+        id: 'PH_EMP_5_1',
+        title: "5.1 Document Verification",
+        actor: Actor.ADMIN,
+        description: "Admin collects & verifies: Passport, IDs, Police Clearance, Medical, TESDA, Experience Certs, and Contracts.",
+    },
+    {
+        id: 'PH_EMP_5_2',
+        title: "5.2 Employer Final Docs",
+        actor: Actor.CLIENT,
+        description: "Employer may need to sign the contract, provide additional permits, or confirm onboarding instructions.",
+    },
+    {
+        id: 'PH_EMP_5_3',
+        title: "5.3 Pre-Deployment Procedures",
+        actor: Actor.ADMIN,
+        description: "Admin arranges Medical, Insurance, Training, Briefing, Contract Stamping, and POEA processing.",
+    },
+    {
+        id: 'PH_EMP_P6',
+        title: "Phase 6: Deployment & Onboarding",
+        actor: Actor.ADMIN,
+        description: "Admin handles final documentation, schedule, and orientation. Employer receives arrival notice and onboarding guide.",
+    },
+    {
+        id: 'PH_EMP_P7',
+        title: "Phase 7: Post-Deployment Support",
+        actor: Actor.SYSTEM,
+        description: "Platform provides 1-week check-in, 1-month performance review, and 3-month follow-up support.",
+        isFinal: true
+    },
+];
+
 const DETAILED_PHILIPPINES_WORKFLOW: WorkflowStep[] = [
     {
         id: 'PH_P1',
@@ -330,6 +497,7 @@ const DETAILED_SINGAPORE_WORKFLOW: WorkflowStep[] = [
 
 export const SINGAPORE_WORKFLOW_DATA: WorkflowStep[] = DETAILED_SINGAPORE_WORKFLOW;
 export const PHILIPPINES_WORKFLOW_DATA: WorkflowStep[] = DETAILED_PHILIPPINES_WORKFLOW;
+export const EMPLOYER_PH_WORKFLOW_DATA: WorkflowStep[] = DETAILED_EMPLOYER_PH_WORKFLOW;
 
 
 export const ADMIN_WORKFLOW_DATA: WorkflowStep[] = [
