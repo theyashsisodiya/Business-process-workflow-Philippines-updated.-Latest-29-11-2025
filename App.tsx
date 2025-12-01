@@ -136,7 +136,7 @@ const App: React.FC = () => {
                 : 'bg-transparent text-slate-500 hover:bg-white/50 hover:text-slate-700'
             }`}
           >
-            Employer Workflow (PH)
+            PH Candidate Workflow
           </button>
            <button
             onClick={() => setActiveView('candidate')}
